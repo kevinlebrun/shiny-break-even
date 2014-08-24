@@ -13,24 +13,76 @@ knit        : slidify::knit2slides
 
 # Break Even
 
-> Calculate your break even point for your business model.
+> Find your business break even point with this simple application.
+
+![800](assets/img/shiny-app.png)
+
+[Break Even on ShinyApps.io](http://kevinlebrun.shinyapps.io/shiny-first-application/)
 
 ---
 
-##
+## A little graph
 
+```{r, echo = FALSE, fig.height = 4}
+library(ggplot2)
+
+periodic_sales <- 100
+price_per_unit <- 5
+fixed_cost <- 4500
+periodic_cost <- 5
+cost_per_unit <- 3
+
+df         <- data.frame(x = seq(0, 24))
+df$sales   <- df$x * periodic_sales * price_per_unit
+df$cost    <- fixed_cost + df$x * (periodic_cost + periodic_sales * cost_per_unit)
+df$profits <- df$sales - df$cost
+
+breakeven <- fixed_cost / (periodic_sales * price_per_unit - periodic_cost - periodic_sales * cost_per_unit)
+
+p <- ggplot(df, aes(x))
+p <- p + geom_line(aes(y = sales, colour = 'Sales'))
+p <- p + geom_line(aes(y = cost, colour = 'Cost'))
+
+# Draw the break-event point
+p <- p + geom_vline(xintercept = breakeven, colour = 'orange')
+
+p <- p + theme(legend.position = 'bottom')
+p <- p + ylab('$')
+p <- p + xlab('Periods of time')
+
+p
+```
+
+The break even point:
+
+```{r}
+fixed_cost / (periodic_sales * price_per_unit
+                - periodic_cost
+                - periodic_sales * cost_per_unit)
+```
 
 ---
 
 ## How does the application work?
 
- 1. Fill in your product costs.
- 2. Define your expected sales.
- 3. Adjust your price.
+ 1. Fill in your product costs
+   - Supports fixed cost, recurring cost, and per unit cost
+ 2. Define your expected sales
+   - How many units you plan to sell in a period of time?
+ 3. Adjust your price
 
-![shiny-app.png]
+You should now see your break even point.
+
+Let's create that business!
 
 ---
+
+## More to come
+
+ - Define a growth model: linear, logarithmic, exponential, ...
+ - Plan cost at certain period of time (ex: new hire).
+ - Define a revenue goal and see when it will be achieved.
+ - Compare business plan.
 
 ## Thank you!
 
